@@ -1,1 +1,2 @@
+include ':cropper', ':tess-two'
 include ':app'
