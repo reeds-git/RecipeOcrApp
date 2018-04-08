@@ -13,6 +13,8 @@ import java.io.File;
 
 public class TessOCR {
 
+    private static final String TAG = TessOCR.class.getSimpleName();
+
     private TessBaseAPI mTess;
 
     public TessOCR() {

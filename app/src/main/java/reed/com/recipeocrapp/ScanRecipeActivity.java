@@ -40,6 +40,8 @@ import java.util.List;
 
 public class ScanRecipeActivity extends AppCompatActivity {
 
+    private static final String TAG = ScanRecipeActivity.class.getSimpleName();
+
     private CropImageView mCropImageView;
     Bitmap converted;
     EditText textView;
@@ -49,8 +51,14 @@ public class ScanRecipeActivity extends AppCompatActivity {
     public static final String DATA_PATH = Environment.getExternalStorageDirectory().toString() + "/DemoOCR/";
     private ProgressDialog mProgressDialog;
 
+    /**
+     * Set up DatabaseAdapter and a flag for if there is correct input
+     */
+    private DatabaseAdapter dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_recipe);
 
@@ -63,14 +71,14 @@ public class ScanRecipeActivity extends AppCompatActivity {
             File dir = new File(path);
             if (!dir.exists()) {
                 if (!dir.mkdirs()) {
-                    Log.v("Main", "ERROR: Creation of directory " + path + " on sdcard failed");
+                    Log.v(TAG, "ERROR: Creation of directory " + path + " on sdcard failed");
                     break;
                 } else {
-                    Log.v("Main", "Created directory " + path + " on sdcard");
+                    Log.v(TAG, "Created directory " + path + " on sdcard");
                 }
             }
-
         }
+
         if (!(new File(DATA_PATH + "tessdata/" + lang + ".traineddata")).exists()) {
             try {
 
@@ -135,7 +143,6 @@ public class ScanRecipeActivity extends AppCompatActivity {
 
                 final String result = mTessOCR.getOCRResult(bitmap).toLowerCase();
 
-
                 runOnUiThread(new Runnable() {
 
                     @Override
@@ -150,11 +157,8 @@ public class ScanRecipeActivity extends AppCompatActivity {
                     }
 
                 });
-
             };
         }).start();
-
-
     }
     private Bitmap convertColorIntoBlackAndWhiteImage(Bitmap orginalBitmap) {
         ColorMatrix colorMatrix = new ColorMatrix();
@@ -244,7 +248,7 @@ public class ScanRecipeActivity extends AppCompatActivity {
             allIntents.add(intent);
         }
 
-        // the main intent is the last in the list (fucking android) so pickup the useless one
+        // the main intent is the last in the list so pickup the useless one
         Intent mainIntent = allIntents.get(allIntents.size() - 1);
         for (Intent intent : allIntents) {
             if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
