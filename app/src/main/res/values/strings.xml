@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RecipeOcrApp</string>
+    <string name="scan_recipe_activity_btn">Scan Recipe</string>
+    <string name="result_placeholder">Text will appear here after the scan</string>
+    <string name="load_image_btn">Load Image</string>
+    <string name="crop_image_btn">Crop Image</string>
 </resources>
