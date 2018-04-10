@@ -135,7 +135,7 @@ public class ScanRecipeActivity extends AppCompatActivity {
      */
 
     public void onCropImageClick(View view) {
-        Bitmap cropped = mCropImageView.getCroppedImage(500, 500);
+        Bitmap cropped = mCropImageView.getCroppedImage(600, 600);
         if (cropped != null)
             mCropImageView.setImageBitmap(cropped);
 
@@ -145,26 +145,16 @@ public class ScanRecipeActivity extends AppCompatActivity {
 
     public String separateIngredients(final String ingredients) {
 
-
+        // make all ingredients part of the same string before separating into each word
         String temp = ingredients.replaceAll("\n", " ");
         String[] words = temp.split("\\s");
-        System.out.println(words[0]);
 
         String newIngredients = "";
-
-        // handel the first number without adding an extra new line to the output
-//        // only needed if there is are bullet points
-//        if (words[0].matches("[1-9]")) {
-//            newIngredients = words[0] + " ";
-//        }
 
         for (int i = 0; i < (words.length - 1); i++) {
 
             // next word is a number
-            if (words[i].length() < 1 ){
-
-            } else if (words[i].length() == 1) {
-                System.out.println(" 11111111111111111111111111111111111111111token");
+            if (words[i].length() == 1) {
 
                 if (words[i].matches("[1-9]")) {
 
@@ -173,10 +163,11 @@ public class ScanRecipeActivity extends AppCompatActivity {
                     }
                     newIngredients += words[i] + " ";
                 }
-            } else {
-                System.out.println(" hh      ");
+
+            } else if (words[i].length() > 1 ) {
+
+                // need a new line before the fraction
                 if (words[i].matches("[1-9]/[1-9]")) {
-                    System.out.println(words[i]);
                     newIngredients += "\n";
                 }
 
@@ -184,12 +175,11 @@ public class ScanRecipeActivity extends AppCompatActivity {
             }
         }
 
-
         return newIngredients;
     }
 
     public static boolean isInteger(String s) {
-//        System.out.println("s = " + s);
+
         boolean isValidInteger = false;
         try
         {
@@ -220,35 +210,35 @@ public class ScanRecipeActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             public void run() {
 
-                final String result = mTessOCR.getOCRResult(bitmap);
+            final String result = mTessOCR.getOCRResult(bitmap);
 
-                runOnUiThread(new Runnable() {
+            runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        if (result != null && !result.equals("")) {
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    if (result != null && !result.equals("")) {
 
-                            String ingredients = result.substring(13, result.toLowerCase().indexOf("directions"));
-                            Log.d(TAG, "before ******************************************************: \n" + ingredients);
-                            String ingredientsList = separateIngredients(ingredients.trim());
+                        String ingredients = result.substring(13, result.toLowerCase().indexOf("directions"));
+                        Log.d(TAG, "before ******************************************************: \n" + ingredients);
+                        String ingredientsList = separateIngredients(ingredients.trim());
 
-                            String directions = result.substring(result.toLowerCase().indexOf("directions") + 11);
-                            directions = directions.replaceAll("\n\n", "\n");
+                        String directions = result.substring(result.toLowerCase().indexOf("directions") + 11);
+                        directions = directions.replaceAll("\n\n", "\n");
 
-                            String recipe = ingredientsList + "\n\n" + directions.trim();
-                            Log.d(TAG, "after ******************************************************: \n" + recipe);
+                        String recipe = ingredientsList + "\n\n" + directions.trim();
+                        Log.d(TAG, "after ******************************************************: \n" + recipe);
 
-                            ingredient1.setText(recipe);
+                        ingredient1.setText(recipe);
 //                            directionsTextView.setText(directions+"&");
-                        }
-
-                        mProgressDialog.dismiss();
                     }
 
-                });
-            };
-        }).start();
+                    mProgressDialog.dismiss();
+                }
+
+            });
+        };
+    }).start();
     }
 
     private Bitmap convertColorIntoBlackAndWhiteImage(Bitmap orginalBitmap) {
