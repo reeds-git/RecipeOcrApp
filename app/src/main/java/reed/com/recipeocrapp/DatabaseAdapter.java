@@ -54,6 +54,7 @@ public class DatabaseAdapter {
         contentValues.put(DatabaseHelper.METRIC, metric);
         contentValues.put(DatabaseHelper.NAME, name);
         long id = db.insert(DatabaseHelper.TABLE_INGREDIENTS, null, contentValues);
+
         return id;
     }
 
@@ -65,6 +66,7 @@ public class DatabaseAdapter {
      */
     public boolean deleteIngredient(String name) {
         SQLiteDatabase db = helper.getWritableDatabase();
+
         return db.delete(DatabaseHelper.TABLE_INGREDIENTS, DatabaseHelper.NAME + "='" + name + "'", null) > 0;
     }
 
@@ -76,6 +78,7 @@ public class DatabaseAdapter {
      */
     public boolean deleteIngredient(Ingredient ingred) {
         SQLiteDatabase db = helper.getWritableDatabase();
+
         return db.delete(DatabaseHelper.TABLE_INGREDIENTS, DatabaseHelper.NAME + "='" +
                 ingred.getName() + "' and " + DatabaseHelper.METRIC + "='" + ingred.getMetric() +
                 "'", null) > 0;
@@ -105,6 +108,7 @@ public class DatabaseAdapter {
 //        contentValues.put(DatabaseHelper.PIC, pic); TODO: Worry about the picture functionality later as stretch goal
         recContentValues.put(DatabaseHelper.INSTRUCTIONS, instructions);
         long id = db.insert(DatabaseHelper.TABLE_RECIPES, null, recContentValues);
+
         return id;
     }
 
@@ -132,6 +136,7 @@ public class DatabaseAdapter {
         ingContentValues.put(DatabaseHelper.METRIC, metric);
         ingContentValues.put(DatabaseHelper.RECIPE_ID, recipeId);
         long id = db.insert(DatabaseHelper.TABLE_RECIPEINGREDIENTS, null, ingContentValues);
+
         return id;
     }
 
@@ -242,6 +247,7 @@ public class DatabaseAdapter {
          */
         while (cursor.moveToNext()) {
             int cid = cursor.getInt(0);
+
             return cid;
         }
 
@@ -567,6 +573,7 @@ public class DatabaseAdapter {
         public static DatabaseHelper getInstance(Context context){
             if (instance == null)
                 instance = new DatabaseHelper(context.getApplicationContext());
+
             return instance;
         }
 

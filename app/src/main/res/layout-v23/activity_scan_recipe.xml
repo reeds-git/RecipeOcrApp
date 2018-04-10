@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="reed.com.recipeocrapp.ScanRecipeActivity">
+
+    <Button
+        android:id="@+id/loadImageBtn"
+        android:layout_width="@android:dimen/thumbnail_height"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="11dp"
+        android:onClick="onLoadImageClick"
+        android:text="@string/load_image_btn"
+        app:layout_constraintEnd_toStartOf="@+id/cropImageBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/cropImageBtn"
+        android:layout_width="@android:dimen/thumbnail_height"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/loadImageBtn"
+        android:layout_alignBottom="@+id/loadImageBtn"
+        android:layout_toEndOf="@+id/loadImageBtn"
+        android:onClick="onCropImageClick"
+        android:text="@string/crop_image_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/loadImageBtn"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.theartofdev.edmodo.cropper.CropImageView
+
+        android:id="@+id/cropImageView"
+        android:layout_width="348dp"
+        android:layout_height="250dp"
+        android:layout_below="@+id/loadImageBtn"
+        android:layout_centerHorizontal="true"
+        android:minHeight="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loadImageBtn"
+        tools:layout_editor_absoluteX="56dp">
+
+
+    </com.theartofdev.edmodo.cropper.CropImageView>
+
+    <EditText
+        android:id="@+id/ingredientEditText"
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/cropImageView"
+        android:allowUndo="true"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:selectAllOnFocus="false"
+        android:singleLine="false"
+        android:text="@string/result_placeholder"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cropImageView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/directionsEditText"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ingredientEditText"
+        android:allowUndo="true"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:selectAllOnFocus="false"
+        android:singleLine="false"
+        android:text="@string/result_placeholder"
+        app:layout_constraintBottom_toTopOf="@+id/addRecipe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredientEditText"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/addRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="14dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:singleLine="false"
+        android:text="Add To Cookbook"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="103dp" />
+
+        </RelativeLayout>

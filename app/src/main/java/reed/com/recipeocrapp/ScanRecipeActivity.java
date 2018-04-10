@@ -41,10 +41,41 @@ import java.util.List;
 public class ScanRecipeActivity extends AppCompatActivity {
 
     private static final String TAG = ScanRecipeActivity.class.getSimpleName();
+    /**
+     * Keep track of how many new lines there is
+     */
+    private int numNewLines;
 
+    /**
+     * Array of ids for each of he rows to keep track of what is on them
+     */
+//    int ids[] = {R.id.newRow1, R.id.newRow2, R.id.newRow3, R.id.newRow4, R.id.newRow5,
+//            R.id.newRow6, R.id.newRow7, R.id.newRow8, R.id.newRow9, R.id.newRow10,
+//            R.id.newRow11, R.id.newRow12, R.id.newRow13, R.id.newRow14, R.id.newRow15,
+//            R.id.newRow16, R.id.newRow17, R.id.newRow18, R.id.newRow19, R.id.newRow20};
+//
     private CropImageView mCropImageView;
     Bitmap converted;
-    EditText textView;
+    EditText ingredient1;
+    EditText ingredient2;
+    EditText ingredient3;
+    EditText ingredient4;
+    EditText ingredient5;
+    EditText ingredient6;
+    EditText ingredient8;
+    EditText ingredient9;
+    EditText ingredient10;
+    EditText ingredient11;
+    EditText ingredient12;
+    EditText ingredient13;
+    EditText ingredient14;
+    EditText ingredient15;
+    EditText ingredient16;
+    EditText ingredient17;
+    EditText ingredient18;
+    EditText ingredient19;
+    EditText ingredient20;
+    EditText directionsTextView;
     private TessOCR mTessOCR;
     private Uri mCropImageUri;
     public static final String lang = "eng";
@@ -62,7 +93,8 @@ public class ScanRecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_recipe);
 
-        textView = (EditText)findViewById(R.id.resultEditText);
+        ingredient1 = (EditText)findViewById(R.id.ingredientEditText);
+        directionsTextView = (EditText)findViewById(R.id.directionsEditText);
 
         mCropImageView = (CropImageView) findViewById(R.id.cropImageView);
         String[] paths = new String[] { DATA_PATH, DATA_PATH + "tessdata/" };
@@ -128,6 +160,33 @@ public class ScanRecipeActivity extends AppCompatActivity {
         doOCR(convertColorIntoBlackAndWhiteImage(cropped) );
     }
 
+    public String separateIngredients(final String ingredients) {
+
+        String newIngredients = "";
+//        String[] lines = ingredients.split("0\\s");
+//
+//        String bulletPoint = "0 ";
+////        if (text.toLowerCase().contains(bulletPoint)) {
+////             = text.split("0\\s");
+//////        }
+//        for (String line : lines) {
+//
+////            if (word ) {
+////
+////            }
+//
+//            System.out.println("line: " + line);
+//            newIngredients += line;
+//        }
+
+        String temp = ingredients.replaceAll("\n", "");
+        newIngredients = temp.replaceAll("0\\s", "\n");
+        System.out.print(temp);
+
+
+        return newIngredients;
+    }
+
     public void doOCR(final Bitmap bitmap) {
         if (mProgressDialog == null) {
             mProgressDialog = ProgressDialog.show(this, "Processing",
@@ -141,7 +200,7 @@ public class ScanRecipeActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             public void run() {
 
-                final String result = mTessOCR.getOCRResult(bitmap).toLowerCase();
+                final String result = mTessOCR.getOCRResult(bitmap);
 
                 runOnUiThread(new Runnable() {
 
@@ -149,8 +208,17 @@ public class ScanRecipeActivity extends AppCompatActivity {
                     public void run() {
                         // TODO Auto-generated method stub
                         if (result != null && !result.equals("")) {
-                            String s = result.trim();
-                            textView.setText(result);
+                            Log.d(TAG, "before ******************************************************: \n" + result);
+
+                            String ingredients = result.substring(1, result.toLowerCase().indexOf("directions"));
+                            String directions = result.substring(result.toLowerCase().indexOf("directions")+ 10);
+
+                            String ingredientsList = separateIngredients(ingredients.trim());
+                            Log.d(TAG, "after ******************************************************: \n" + ingredientsList + directions);
+                            System.out.println("&" + directions);
+
+                            ingredient1.setText(ingredientsList + directions);
+//                            directionsTextView.setText(directions+"&");
                         }
 
                         mProgressDialog.dismiss();
@@ -160,6 +228,7 @@ public class ScanRecipeActivity extends AppCompatActivity {
             };
         }).start();
     }
+
     private Bitmap convertColorIntoBlackAndWhiteImage(Bitmap orginalBitmap) {
         ColorMatrix colorMatrix = new ColorMatrix();
         colorMatrix.setSaturation(0);
@@ -178,6 +247,7 @@ public class ScanRecipeActivity extends AppCompatActivity {
 
         return blackAndWhiteBitmap;
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
