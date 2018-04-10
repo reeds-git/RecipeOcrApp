@@ -145,67 +145,51 @@ public class ScanRecipeActivity extends AppCompatActivity {
 
     public String separateIngredients(final String ingredients) {
 
-        String newIngredients = "";
-//        String[] lines = ingredients.split("0\\s");
-//
-//        String bulletPoint = "0 ";
-////        if (text.toLowerCase().contains(bulletPoint)) {
-////             = text.split("0\\s");
-//////        }
-//        for (String line : lines) {
-//
-////            if (word ) {
-////
-////            }
-//
-//            System.out.println("line: " + line);
-//            newIngredients += line;
-//        }
 
         String temp = ingredients.replaceAll("\n", " ");
         String[] words = temp.split("\\s");
         System.out.println(words[0]);
 
-        String token = "";
-        if (!isInteger(words[0])){
-            System.out.println("in if " + words[0]);
-            token = "\\" + words[0] + "\\s";
+        String newIngredients = "";
 
-            newIngredients = temp.replaceAll(token, "\n");
+        // handel the first number without adding an extra new line to the output
+//        // only needed if there is are bullet points
+//        if (words[0].matches("[1-9]")) {
+//            newIngredients = words[0] + " ";
+//        }
 
-        } else {
+        for (int i = 0; i < (words.length - 1); i++) {
 
-            for (int i = 1; i < (words.length - 1); i++) {
-                System.out.println("length = " + words[i].length());
-                if (words[i].length() >= 1 ){
+            // next word is a number
+            if (words[i].length() < 1 ){
 
-                    System.out.println(words[i - 1] + "    " + words[i] + " " + words[i].substring(0, 1));
+            } else if (words[i].length() == 1) {
+                System.out.println(" 11111111111111111111111111111111111111111token");
+
+                if (words[i].matches("[1-9]")) {
+
+                    if (i != 0) {
+                        newIngredients += "\n";
+                    }
+                    newIngredients += words[i] + " ";
+                }
+            } else {
+                System.out.println(" hh      ");
+                if (words[i].matches("[1-9]/[1-9]")) {
+                    System.out.println(words[i]);
+                    newIngredients += "\n";
                 }
 
-                // next word is a number
-                if (words[i].length() < 1 ){
-
-                } else if (words[i].length() != 1) {
-                    if (isInteger(words[i].substring(0, 1))) {
-                        newIngredients += words[i - 1] + "\n";
-                    } else {
-                        newIngredients += words[i - 1] + " ";
-                    }
-                } else {
-                    if (isInteger(words[i])) {
-                        newIngredients += words[i - 1] + "\n";
-                    } else {
-                        newIngredients += words[i - 1] + " ";
-                    }
-                }
+                newIngredients += words[i] + " ";
             }
         }
+
 
         return newIngredients;
     }
 
     public static boolean isInteger(String s) {
-        System.out.println("s = " + s);
+//        System.out.println("s = " + s);
         boolean isValidInteger = false;
         try
         {
@@ -245,12 +229,13 @@ public class ScanRecipeActivity extends AppCompatActivity {
                         // TODO Auto-generated method stub
                         if (result != null && !result.equals("")) {
 
-                            String ingredients = result.substring(12, result.toLowerCase().indexOf("directions"));
+                            String ingredients = result.substring(13, result.toLowerCase().indexOf("directions"));
                             Log.d(TAG, "before ******************************************************: \n" + ingredients);
+                            String ingredientsList = separateIngredients(ingredients.trim());
+
                             String directions = result.substring(result.toLowerCase().indexOf("directions") + 11);
                             directions = directions.replaceAll("\n\n", "\n");
 
-                            String ingredientsList = separateIngredients(ingredients.trim());
                             String recipe = ingredientsList + "\n\n" + directions.trim();
                             Log.d(TAG, "after ******************************************************: \n" + recipe);
 
