@@ -4,13 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private Button scanRecipeActivityBtn;
+
+    private ListView recipesList;
+    private DatabaseAdapter dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +32,50 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent scanRecipeActivityIntent = new Intent(getApplicationContext(), ScanRecipeActivity.class);
                 startActivity(scanRecipeActivityIntent);
+            }
+        });
+
+        /**
+         * Get the recipes from the database
+         */
+        dbHelper = new DatabaseAdapter(getApplicationContext());
+        ArrayList<String> items = dbHelper.getAllRecipes();
+
+        /**
+         * Connect the adapter to the items, and the recipesList to the adapter so it will display
+         */
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.row_layout, items);
+        recipesList = (ListView) findViewById(R.id.allRecipes);
+        recipesList.setAdapter(adapter);
+
+        /**
+         * This will set up the items to display the recipe if clicked.
+         */
+        recipesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            /**
+             * What actually is called when the item is clicked
+             *
+             * @param parent From override, not used here, the adapter of the view
+             * @param view The view which the item was from
+             * @param position The position in the list.
+             * @param id Unused from override.
+             */
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                /**
+                 * Get the name of the activity
+                 */
+                String recipeName = recipesList.getItemAtPosition(position).toString();
+
+                /**
+                 * Use Extras on intent to share information
+                 */
+                Intent intent = new Intent(getApplicationContext(), DisplayRecipeActivity.class);
+                intent.putExtra("recipeName", recipeName);
+                startActivity(intent);
+                finish();
             }
         });
     }
