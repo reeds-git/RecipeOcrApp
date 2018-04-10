@@ -195,7 +195,7 @@ public class DatabaseAdapter {
          * While we still have new data to parse, create a string for the ingredient and add it to the returned ArrayList
          */
         while (cursor.moveToNext()) {
-            int quant = cursor.getInt(1);
+            String quant = cursor.getString(1);
             String unit = cursor.getString(2);
             String name = cursor.getString(3);
             ingredients.add(new Ingredient(name, quant, unit));
@@ -355,7 +355,7 @@ public class DatabaseAdapter {
          * While we still have new data to parse, create a string for the ingredient and add it to the returned ArrayList
          */
         while (cursor.moveToNext()) {
-            int quant = cursor.getInt(1);
+            String quant = cursor.getString(1);
             String unit = cursor.getString(2);
             String name = cursor.getString(3);
             ingredients.add(new Ingredient(name, quant, unit));
@@ -407,7 +407,6 @@ public class DatabaseAdapter {
     public long addToShoppingList(String name, String quant, String unit, boolean auto) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
-        int quantNum = Integer.parseInt(quant);
         ArrayList<Ingredient> shoppingList = getAllShoppingListItemsVerbose();
 
         /**
@@ -423,7 +422,7 @@ public class DatabaseAdapter {
                 /**
                  * Update the value instead of adding a new instance of the ingredient
                  */
-                quantNum += i.getQuantity();
+                quant += i.getQuantity();
                 Log.i(TAG, "same name: " + name + " Metric: " + unit);
                 db.delete(helper.TABLE_SHOPPINGLIST, "NAME=? AND METRIC=?", new String[]{name, unit});
                 db.delete(helper.TABLE_SHOPPINGLIST, "NAME=? AND METRIC=?", new String[]{name.toLowerCase(), unit});
@@ -432,7 +431,7 @@ public class DatabaseAdapter {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.NAME, name);
-        contentValues.put(DatabaseHelper.QUANTITY, String.valueOf(quantNum));
+        contentValues.put(DatabaseHelper.QUANTITY, String.valueOf(quant));
         contentValues.put(DatabaseHelper.METRIC, unit);
 
         /**
@@ -519,7 +518,7 @@ public class DatabaseAdapter {
         while (cursor.moveToNext()) {
             int cid = cursor.getInt(0);
             String name = cursor.getString(1);
-            int quant = cursor.getInt(2);
+            String quant = cursor.getString(2);
             String unit = cursor.getString(3);
             ingredients.add(new Ingredient(name, quant, unit));
         }
@@ -608,7 +607,7 @@ public class DatabaseAdapter {
                  */
                 db.execSQL("CREATE TABLE ingredients (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "NAME VARCHAR(255), " +
-                        "QUANTITY INTEGER, " +
+                        "QUANTITY VARCHAR(255), " +
                         "METRIC VARCHAR(255));");
 
                 /**
@@ -616,7 +615,7 @@ public class DatabaseAdapter {
                  */
                 db.execSQL("CREATE TABLE recipeIngredients (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "NAME VARCHAR(255), " +
-                        "QUANTITY INTEGER, " +
+                        "QUANTITY VARCHAR(255), " +
                         "METRIC VARCHAR(255), " +
                         "RECIPE_ID INTEGER, " +
                         "FOREIGN KEY(RECIPE_ID) REFERENCES recipes(ID));");
@@ -626,7 +625,7 @@ public class DatabaseAdapter {
                  */
                 db.execSQL("CREATE TABLE shoppingList (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "NAME VARCHAR(255), " +
-                        "QUANTITY INTEGER, " +
+                        "QUANTITY VARCHAR(255), " +
                         "METRIC VARCHAR(255), " +
                         "MANUAL_ADD INTEGER);");
 

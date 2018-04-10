@@ -15,7 +15,7 @@ public class Ingredient {
      */
     private String name;
     private String metric;
-    private int quantity;
+    private String quantity;
 
     /**
      * Non-Default constructor that has a name, quantity and metric units
@@ -24,7 +24,7 @@ public class Ingredient {
      * @param quantity
      * @param metric
      */
-    public Ingredient (String name, int quantity, String metric) {
+    public Ingredient (String name, String quantity, String metric) {
         this.name = name;
         this.quantity = quantity;
         this.metric = metric;
@@ -53,7 +53,7 @@ public class Ingredient {
      *
      * @return quantity
      */
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
@@ -63,15 +63,14 @@ public class Ingredient {
      * @return quantity
      */
     public String getQuantityString() {
-        return Integer.toString(quantity);
+        return quantity;
     }
 
     /**
      * set the quantity
      *
      */
-    public void setQuantity(int newQuantity) {
-        if (newQuantity > 0)
+    public void setQuantity(String newQuantity) {
             quantity = newQuantity;
     }
 }
